@@ -16,6 +16,9 @@ import seaborn as sns
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense, Dropout
 from tensorflow.keras.optimizers import Adam
+from tensorflow.keras.layers import BatchNormalization, LeakyReLU, ELU
+from sklearn.utils.class_weight import compute_class_weight
+from tensorflow.keras.regularizers import l2
 
 class FraudDetection:
     def __init__(self, df, df_val):
@@ -37,7 +40,7 @@ class FraudDetection:
         Preprocess the dataset: Separate features and target, scale features, and split into train/test sets.
         """
         # Separate features (X) and target (y)
-        X = self.df.drop(columns=['Fraudster', 'AccountID'])  # Drop non-feature columns
+        X = self.df.drop(columns=['Fraudster','AccountID'])  # Drop non-feature columns
         y = self.df['Fraudster']
 
         # Scale numerical features
@@ -121,6 +124,43 @@ class FraudDetection:
         model.compile(optimizer=Adam(learning_rate=0.001), loss='binary_crossentropy', metrics=['accuracy'])
         return model
 
+
+    def build_nn_dense_model(self, input_shape):
+        """
+        Build an improved Neural Network model with Batch Normalization, Linear Activation, and more layers.
+        """
+ 
+        model = Sequential()
+
+        # Input layer
+        model.add(Dense(128, input_dim=input_shape, kernel_regularizer=l2(0.01)))
+        model.add(BatchNormalization())
+        model.add(LeakyReLU(alpha=0.1))
+        model.add(Dropout(0.5))
+
+        # Hidden layers
+        model.add(Dense(64, kernel_regularizer=l2(0.01)))
+        model.add(BatchNormalization())
+        model.add(ELU())
+        model.add(Dropout(0.5))
+
+        model.add(Dense(32, kernel_regularizer=l2(0.01)))
+        model.add(BatchNormalization())
+        model.add(LeakyReLU(alpha=0.1))
+        model.add(Dropout(0.5))
+
+        model.add(Dense(16, kernel_regularizer=l2(0.01)))
+        model.add(BatchNormalization())
+        model.add(ELU())
+        model.add(Dropout(0.5))
+
+        # Output layer
+        model.add(Dense(1, activation='sigmoid'))
+
+        # Compile the model
+        model.compile(optimizer=Adam(learning_rate=0.001), loss='binary_crossentropy', metrics=['accuracy'])
+        return model
+
     def NN_train_and_evaluate_model(self, input_shape, X_train, y_train, X_test, y_test, approach_name, epochs=50, batch_size=32):
         """
         Train and evaluate a Neural Network model.
@@ -128,6 +168,10 @@ class FraudDetection:
         # Build the model
         model = self.build_nn_model(input_shape)
 
+        # class_weights = compute_class_weight('balanced', classes=[0, 1], y=y_train)
+        # class_weights = {0: class_weights[0], 1: class_weights[1]}
+        # class_weights = {0: 1, 1: 2}
+        
         # Train the model
         history = model.fit(X_train, y_train, epochs=epochs, batch_size=batch_size, validation_data=(X_test, y_test), verbose=1)
 
@@ -142,14 +186,14 @@ class FraudDetection:
         print("ROC-AUC Score:", roc_auc_score(y_test, y_pred))
 
         # Plot ROC Curve
-        fpr, tpr, thresholds = roc_curve(y_test, y_pred)
-        plt.plot(fpr, tpr, label=f'ROC Curve (AUC = {roc_auc_score(y_test, y_pred):.2f})')
-        plt.plot([0, 1], [0, 1], 'k--', label='Random Guess')
-        plt.xlabel('False Positive Rate')
-        plt.ylabel('True Positive Rate')
-        plt.title('ROC Curve')
-        plt.legend()
-        plt.show()
+        # fpr, tpr, thresholds = roc_curve(y_test, y_pred)
+        # plt.plot(fpr, tpr, label=f'ROC Curve (AUC = {roc_auc_score(y_test, y_pred):.2f})')
+        # plt.plot([0, 1], [0, 1], 'k--', label='Random Guess')
+        # plt.xlabel('False Positive Rate')
+        # plt.ylabel('True Positive Rate')
+        # plt.title('ROC Curve')
+        # plt.legend()
+        # plt.show()
 
         # Plot training history
         plt.plot(history.history['loss'], label='Training Loss')
@@ -186,9 +230,9 @@ class FraudDetection:
         self.NN_train_and_evaluate_model(input_shape, X_train_hybrid, y_train_hybrid, self.X_test, self.y_test, "Hybrid Sampling", epochs=50, batch_size=32)
 
         # Finalize ROC Curve plot
-        plt.plot([0, 1], [0, 1], 'k--', label='Random Guess')
-        plt.xlabel('False Positive Rate')
-        plt.ylabel('True Positive Rate')
-        plt.title('ROC Curve Comparison')
-        plt.legend()
-        plt.show()
+        # plt.plot([0, 1], [0, 1], 'k--', label='Random Guess')
+        # plt.xlabel('False Positive Rate')
+        # plt.ylabel('True Positive Rate')
+        # plt.title('ROC Curve Comparison')
+        # plt.legend()
+        # plt.show()
