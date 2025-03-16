@@ -119,20 +119,20 @@ class FraudDetectionFeatureExtractor:
         # Aggregate features at the account level
         aggregated_features = self.df.groupby('AccountID').agg({
             'HourOfDay': ['mean'],
-            'DayOfWeek': ['mean'],
-            'TimeSinceLastTransaction': ['mean'],
-            'BalanceChangeRatio': ['mean'],
+            # 'DayOfWeek': ['mean'],
+            # 'TimeSinceLastTransaction': ['mean'],
+            # 'BalanceChangeRatio': ['mean'],
             'BalanceDeviation': ['mean'],
-            'TransactionAmountDeviation': ['mean'],
-            'TransactionAmountRatio': ['mean'],
-            'TransactionFrequencyPerHour': ['mean'],
+            # 'TransactionAmountDeviation': ['mean'],
+            # 'TransactionAmountRatio': ['mean'],
+            # 'TransactionFrequencyPerHour': ['mean'],
             'TransactionBurstiness': ['mean'],
-            'IsUnusualTransactionType': ['sum'],
+            # 'IsUnusualTransactionType': ['sum'],
             'IsExternalAccount': ['sum'],
             'ExternalAccountFrequency': ['mean'],
             'isUnauthorizedOverdraft': ['sum'],
-            'OverdraftFrequency': ['mean'],
-            'RollingAverageAmount': ['mean'],
+            # 'OverdraftFrequency': ['mean'],
+            # 'RollingAverageAmount': ['mean'],
             'RollingTransactionCount': ['mean']
         })
 

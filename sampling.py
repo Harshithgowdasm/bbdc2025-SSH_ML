@@ -13,6 +13,7 @@ from sklearn.ensemble import RandomForestClassifier, VotingClassifier
 from sklearn.metrics import classification_report, confusion_matrix, roc_auc_score, roc_curve
 import matplotlib.pyplot as plt
 import seaborn as sns
+import tensorflow as tf
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense, Dropout
 from tensorflow.keras.optimizers import Adam
