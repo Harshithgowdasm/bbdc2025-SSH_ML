@@ -1,9 +1,0 @@
-#Task related files
-task/
-*.zip
-data/
-
-
-#Virtual Environment files
-venv/
-env/
