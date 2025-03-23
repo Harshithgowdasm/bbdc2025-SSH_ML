@@ -1,8 +1,10 @@
 #Task related files
 task/
 *.zip
-data/
 
+#data and model files
+data/
+AutogluonModels/
 
 #Virtual Environment files
 venv/

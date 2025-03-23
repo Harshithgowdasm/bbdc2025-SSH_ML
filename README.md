@@ -35,3 +35,9 @@ source venv/bin/activate
 pip3 install -r requirements.txt
 ```
 
+### AutoGluon Model
+Build machine learning solutions on raw data in a few lines of code. 
+
+Documnetation : https://auto.gluon.ai/stable/index.html 
+
+Used Model : https://auto.gluon.ai/stable/api/autogluon.tabular.TabularPredictor.html 
